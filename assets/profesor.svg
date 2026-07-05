@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500" role="img" aria-label="Foto del profesor (placeholder)">
+  <rect width="400" height="500" fill="#171717"/>
+  <circle cx="200" cy="200" r="70" fill="#262626"/>
+  <path d="M90 420c0-70 50-115 110-115s110 45 110 115z" fill="#262626"/>
+  <text x="200" y="470" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#6b6b6b">Foto del profesor</text>
+</svg>
