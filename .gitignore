@@ -1,0 +1,14 @@
+# Entorno de Python (herramienta local para el logo) — NO subir
+.venv-tools/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+
+# Temporales
+*.log
+*.tmp
