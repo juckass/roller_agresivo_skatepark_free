@@ -316,9 +316,12 @@
         <figure class="rider-card"><img src="assets/estudiantes/rider-juan-ignacio.jpg" alt="Ficha del rider Juan Ignacio (El Misterioso)" loading="lazy" /><figcaption>Juan Ignacio «El Misterioso»</figcaption></figure>
         <figure class="rider-card"><img src="assets/estudiantes/rider-ariel.jpg" alt="Ficha del rider Ariel Armijo (Bruce Willis)" loading="lazy" /><figcaption>Ariel «Bruce Willis»</figcaption></figure>
         <figure class="rider-card"><img src="assets/estudiantes/rider-laura.jpg" alt="Ficha de la rider Laura Rojas (Lauriña)" loading="lazy" /><figcaption>Laura «Lauriña»</figcaption></figure>
+        <!-- MENORES DE EDAD: ocultos hasta contar con autorización escrita de sus apoderados.
+             Para reactivar, descomenta las fichas que correspondan.
         <figure class="rider-card"><img src="assets/estudiantes/rider-maite.jpg" alt="Ficha de la rider Maite Pascal (MAI.E)" loading="lazy" /><figcaption>Maite «MAI.E»</figcaption></figure>
         <figure class="rider-card"><img src="assets/estudiantes/rider-florencia.jpg" alt="Ficha de la rider Florencia Celis (Flo)" loading="lazy" /><figcaption>Florencia «Flo»</figcaption></figure>
         <figure class="rider-card"><img src="assets/estudiantes/rider-agustin.jpg" alt="Ficha del rider Agustín Álvarez (El Rucio)" loading="lazy" /><figcaption>Agustín «El Rucio»</figcaption></figure>
+        -->
       </div>
 
       <!-- ==============================================================
@@ -328,14 +331,24 @@
       =============================================================== -->
       <div class="ig-block reveal d1">
         <h3 class="ig-heading">Síguenos en <span class="highlight">Instagram</span></h3>
-        <div class="instagram-embed" id="instagram-feed">
-          <!-- PEGAR AQUÍ EL CÓDIGO DEL WIDGET -->
-          <div class="ig-placeholder">
-            <p>📸 Aquí se cargará el feed de Instagram automáticamente.</p>
-            <a href="https://www.instagram.com/roller_agresivo_skatepark_free" target="_blank" rel="noopener" class="btn btn-small">
-              Ver @roller_agresivo_skatepark_free
-            </a>
-          </div>
+
+        <!-- ==============================================================
+             FEED DE INSTAGRAM (dinámico)
+             1. Crea una cuenta gratis en https://behold.so
+             2. Conecta @roller_agresivo_skatepark_free y copia tu "JSON feed" URL
+             3. Pégala en js/main.js -> IG_FEED_URL
+             La grilla se llena sola con tus últimas 10 publicaciones.
+        =============================================================== -->
+        <div class="riders-grid ig-grid" id="instagramFeed">
+          <p class="ig-loading">Cargando publicaciones…</p>
+        </div>
+
+        <!-- Se muestra si aún no hay feed configurado o falla la carga -->
+        <div class="ig-fallback" id="instagramFallback" hidden>
+          <p>📸 Mira todo nuestro contenido en Instagram.</p>
+          <a href="https://www.instagram.com/roller_agresivo_skatepark_free" target="_blank" rel="noopener" class="btn btn-small">
+            Ver @roller_agresivo_skatepark_free
+          </a>
         </div>
       </div>
     </div>

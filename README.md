@@ -75,19 +75,34 @@ Es la que se ve cuando compartes el link en WhatsApp / Instagram / Facebook.
 
 ## 📸 Instagram (la única parte dinámica)
 
-El feed de Instagram se carga con un **widget externo gratuito**. Recomendado: **Behold** o **SnapWidget**.
+Las publicaciones se muestran con **nuestro propio diseño de tarjetas** (las mismas de los
+riders). Al hacer clic, **abre el post en Instagram** (y en el celular, la app). Hasta **10**.
+Hay dos formas de cargarlas:
 
-### Pasos (con Behold, gratis):
-1. Entra a https://behold.so y crea una cuenta.
-2. Conecta la cuenta de Instagram **@roller_agresivo_skatepark_free**.
-3. Elige el estilo de galería (grid) y copia el código que te entrega.
-4. En `index.html`, busca:
-   ```html
-   <!-- PEGAR AQUÍ EL CÓDIGO DEL WIDGET -->
+### MODO B — Manual (SIN acceso a la cuenta) ✅ recomendado si no eres dueño de la cuenta
+El perfil es público, así que puedes armar las tarjetas a mano:
+1. Elige los posts que quieras mostrar en el perfil.
+2. Guarda/captura la imagen de cada uno en **`assets/instagram/`**
+   (nómbralas `post-1.jpg`, `post-2.jpg`, …; ideal cuadradas ~1080×1080).
+3. Copia el **link** de cada post (botón compartir → "Copiar enlace":
+   `https://www.instagram.com/p/CODIGO/`).
+4. En `js/main.js`, en `IG_POSTS`, agrega cada uno:
+   ```js
+   var IG_POSTS = [
+     { img: 'assets/instagram/post-1.jpg', link: 'https://www.instagram.com/p/CODIGO1/' },
+     { img: 'assets/instagram/post-2.jpg', link: 'https://www.instagram.com/p/CODIGO2/' },
+     // ... hasta 10
+   ];
    ```
-   y pega ahí el código. Puedes borrar el bloque `<div class="ig-placeholder">...</div>`.
+5. Guarda y recarga. ¡Listo! (Lo actualizas tú cuando quieras.)
 
-> Alternativa igual de simple: **SnapWidget** (https://snapwidget.com).
+### MODO A — Automático (solo si tienes acceso a la cuenta)
+1. En https://behold.so conecta **@roller_agresivo_skatepark_free** y crea un **JSON feed**.
+2. En `js/main.js` pega la URL en `IG_FEED_URL = 'https://feeds.behold.so/TU-ID';`.
+3. Se actualiza solo con tus últimas publicaciones.
+
+> Si `IG_FEED_URL` e `IG_POSTS` están vacíos, se muestra un botón "Ver @…" de respaldo.
+> Para mostrar más/menos posts, cambia `IG_COUNT` (por defecto 10).
 
 ---
 

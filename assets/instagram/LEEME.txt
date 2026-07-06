@@ -1,0 +1,8 @@
+Pon aquí las imágenes de los posts de Instagram que quieras mostrar
+(descárgalas o captúralas del perfil público).
+
+Nómbralas: post-1.jpg, post-2.jpg, ... (hasta 10)
+Ideal: cuadradas (1:1) y ~1080x1080.
+
+Luego, en js/main.js, en IG_POSTS, agrega cada una con su link:
+  { img: 'assets/instagram/post-1.jpg', link: 'https://www.instagram.com/p/CODIGO/' }

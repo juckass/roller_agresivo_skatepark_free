@@ -589,6 +589,26 @@ ul { list-style: none; }
 }
 .rider-card:hover figcaption { opacity: 1; }
 
+/* ---- Tarjetas de Instagram (mismo diseño, foto cuadrada estilo IG) ---- */
+.ig-card { aspect-ratio: 1 / 1; cursor: pointer; }
+.ig-card img { object-fit: cover; }
+/* Ícono de Instagram que aparece al pasar el mouse */
+.ig-card::before {
+  content: "";
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 26px; height: 26px;
+  z-index: 3;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'%3E%3Crect x='2' y='2' width='20' height='20' rx='5'/%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Ccircle cx='17.5' cy='6.5' r='.6' fill='white'/%3E%3C/svg%3E") center/contain no-repeat;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.8));
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.ig-card:hover::before { opacity: 1; }
+.ig-loading, .ig-fallback { grid-column: 1 / -1; text-align: center; color: var(--gray); padding: 24px; }
+.ig-fallback { display: block; }
+.ig-fallback p { margin-bottom: 14px; font-size: 1.05rem; }
+
 /* ==================================================================== */
 /*  LIGHTBOX                                                            */
 /* ==================================================================== */
