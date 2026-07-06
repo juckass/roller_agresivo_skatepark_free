@@ -28,7 +28,10 @@
 
 /* ----------------------------- Reset ------------------------------- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
 
 body {
   font-family: var(--font-body);
@@ -38,6 +41,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   position: relative;
+  width: 100%;
 }
 
 /* Grano global sutil sobre toda la página */
@@ -176,7 +180,15 @@ ul { list-style: none; }
   border-bottom: 2px solid var(--green);
   transition: box-shadow .3s ease, background .3s ease;
 }
-.site-header.scrolled { box-shadow: 0 6px 26px rgba(0,0,0,.55), 0 2px 0 rgba(185,255,0,.25); }
+/* Sticky siempre visible: al hacer scroll "baja" con una entrada deslizante */
+.site-header.scrolled {
+  box-shadow: 0 6px 26px rgba(0,0,0,.55), 0 2px 0 rgba(185,255,0,.25);
+  animation: headerDrop .4s cubic-bezier(.2,.7,.2,1);
+}
+@keyframes headerDrop {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
+}
 .header-inner { display: flex; align-items: center; justify-content: space-between; height: 74px; transition: height .3s ease; }
 .logo img { height: 52px; width: auto; }
 
@@ -430,27 +442,57 @@ ul { list-style: none; }
 .class-list { margin-bottom: 24px; }
 .class-list li { color: var(--gray); padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border); }
 .class-list li::before { content: "▸"; color: var(--green); position: absolute; left: 4px; font-weight: 700; }
+.class-list li.more {
+  color: var(--green);
+  font-family: var(--font-cond);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  border-bottom: none;
+}
+.class-list li.more::before { content: "★"; }
 .classes-note { margin-top: 42px; text-align: center; color: var(--gray); font-size: 1.15rem; }
 .classes-note strong { color: var(--white); }
 
 /* ==================================================================== */
 /*  PROFESOR                                                            */
 /* ==================================================================== */
-.teacher { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 48px; align-items: center; }
+.teacher { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 48px; align-items: center; }
 .teacher-photo {
   border: 3px solid var(--green);
+  border-radius: 8px;
   overflow: hidden;
-  aspect-ratio: 4/5;
   background: var(--surface);
   position: relative;
-  box-shadow: 10px 10px 0 rgba(185,255,0,.12);
+  box-shadow: 12px 12px 0 rgba(185,255,0,.14);
   transform: rotate(-1.5deg);
+  cursor: zoom-in;
+  transition: transform .3s ease;
+  max-width: 420px;
 }
-.teacher-photo img { width: 100%; height: 100%; object-fit: cover; }
+.teacher-photo:hover { transform: rotate(0deg) scale(1.02); }
+.teacher-photo img { width: 100%; height: auto; display: block; }
+.teacher-tag {
+  font-family: var(--font-cond);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--green);
+  margin-top: 10px;
+}
 .teacher-points { margin-top: 26px; display: flex; flex-direction: column; gap: 12px; }
 .teacher-points li { padding-left: 30px; position: relative; color: var(--gray); font-size: 1.05rem; }
 .teacher-points li::before { content: "✔"; color: var(--green); position: absolute; left: 0; font-weight: 700; }
 .teacher-points strong { color: var(--white); }
+.teacher-quote {
+  margin-top: 24px;
+  padding-left: 18px;
+  border-left: 3px solid var(--green);
+  font-family: var(--font-cond);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--white);
+}
 
 /* ==================================================================== */
 /*  PARTNERS                                                            */
@@ -484,42 +526,117 @@ ul { list-style: none; }
 .partners-cta a { color: var(--green); font-weight: 700; text-decoration: underline; }
 
 /* ==================================================================== */
-/*  GALERÍA (mosaico)                                                   */
+/*  GRILLA DE FICHAS (trading cards 3D con brillo)                      */
 /* ==================================================================== */
-.gallery {
+.riders-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 190px;
-  gap: 14px;
-  margin-top: 48px;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 22px;
+  margin-top: 52px;
+  perspective: 1100px;
 }
-.gallery-item {
+.rider-card {
   position: relative;
+  margin: 0;
+  aspect-ratio: 3 / 4;             /* mismo marco para todas -> filas alineadas */
   overflow: hidden;
+  cursor: zoom-in;
+  transform-style: preserve-3d;
+  transition: transform .45s cubic-bezier(.2,.7,.2,1), box-shadow .3s ease, border-color .3s ease;
+  will-change: transform;
+  border-radius: 10px;
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: #0b0b0b;             /* fondo oscuro para el sobrante (se mezcla con la ficha) */
+  box-shadow: 0 12px 30px rgba(0,0,0,.5);
 }
-.gallery-item img {
+.rider-card img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;            /* ficha completa, sin recortar el diseño */
   display: block;
-  transition: transform .5s ease, filter .4s ease;
-  filter: grayscale(.25) contrast(1.05);
+  pointer-events: none;
 }
-.gallery-item::after {
+/* Brillo/holograma que sigue el cursor */
+.rider-card::after {
   content: "";
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, transparent 55%, rgba(185,255,0,.12) 100%);
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.28), transparent 42%);
+  opacity: 0;
+  transition: opacity .3s ease;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+}
+.rider-card:hover { box-shadow: 0 26px 55px rgba(0,0,0,.6); border-color: var(--green); }
+.rider-card:hover::after { opacity: 1; }
+.rider-card figcaption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 30px 12px 12px;
+  font-family: var(--font-cond);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: .9rem;
+  text-align: center;
+  color: var(--white);
+  background: linear-gradient(180deg, transparent, rgba(5,5,5,.92));
+  border-radius: 0 0 10px 10px;
   opacity: 0;
   transition: opacity .35s ease;
+  pointer-events: none;
 }
-.gallery-item:hover img { transform: scale(1.08); filter: grayscale(0) contrast(1.05); }
-.gallery-item:hover { border-color: var(--green); }
-.gallery-item:hover::after { opacity: 1; }
-.gi-big  { grid-column: span 2; grid-row: span 2; }
-.gi-wide { grid-column: span 2; }
-.gi-tall { grid-row: span 2; }
+.rider-card:hover figcaption { opacity: 1; }
+
+/* ==================================================================== */
+/*  LIGHTBOX                                                            */
+/* ==================================================================== */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;            /* respeta la barra del navegador en móvil */
+  z-index: 300;
+  display: none;
+  background: rgba(0,0,0,.92);
+  backdrop-filter: blur(4px);
+}
+.lightbox.open { display: block; animation: fadeIn .25s ease; }
+/* Centrado a prueba de balas: absolute + inset:0 + margin:auto */
+.lightbox img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: 90vw;
+  max-height: 82vh;
+  max-height: 82dvh;                    /* viewport real en móvil */
+  width: auto;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.7);
+}
+.lightbox-close {
+  position: absolute;
+  top: max(14px, env(safe-area-inset-top));
+  right: max(14px, env(safe-area-inset-right));
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; line-height: 1;
+  color: #0a0a0a; background: var(--green);
+  border: none; border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+  box-shadow: 0 4px 14px rgba(0,0,0,.5);
+}
+/* Bloquear scroll del fondo cuando el modal está abierto */
+body.no-scroll { overflow: hidden; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 600px) {
+  .lightbox { padding: 14px; }
+}
 
 /* ==================================================================== */
 /*  INSTAGRAM                                                           */
@@ -596,9 +713,7 @@ ul { list-style: none; }
 @media (max-width: 860px) {
   .mv-grid, .classes-grid { grid-template-columns: 1fr; }
   .partners-grid { grid-template-columns: repeat(2, 1fr); }
-  .gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; }
-  .gi-big { grid-column: span 2; grid-row: span 2; }
-  .gi-wide { grid-column: span 2; grid-row: span 1; }
+  .riders-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .teacher { grid-template-columns: 1fr; gap: 40px; }
   .teacher-photo { max-width: 340px; margin: 0 auto; }
 
@@ -608,10 +723,15 @@ ul { list-style: none; }
     width: min(78vw, 320px); height: calc(100vh - 74px);
     flex-direction: column; align-items: flex-start; gap: 8px;
     background: var(--bg-alt); border-left: 2px solid var(--green);
-    padding: 30px 28px; transform: translateX(105%);
-    transition: transform .3s ease; z-index: 99;
+    padding: 30px 28px; z-index: 99;
+    overflow-y: auto;
+    /* Oculto con fade + leve deslizamiento (NO sale por el costado -> sin scroll lateral) */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-12px);
+    transition: opacity .28s ease, transform .28s ease, visibility .28s;
   }
-  .nav.open { transform: translateX(0); }
+  .nav.open { opacity: 1; visibility: visible; transform: translateY(0); }
   .nav-link { font-size: 1.3rem; padding: 8px 0; width: 100%; }
   .nav-cta { margin-top: 12px; }
 }
@@ -627,6 +747,7 @@ ul { list-style: none; }
   .section { padding: 64px 0; }
   .hero { min-height: 82vh; }
   .hero-logo { width: clamp(180px, 66vw, 260px); }
+  .riders-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .whatsapp-label { display: none; }
   .whatsapp-float { padding: 15px; }
   .hero-actions { flex-direction: column; }
