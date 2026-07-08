@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.TU-DOMINIO.cl/sitemap.xml
+Sitemap: https://crossgrindchile.cl/sitemap.xml
