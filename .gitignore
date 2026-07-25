@@ -12,3 +12,6 @@ Thumbs.db
 # Temporales
 *.log
 *.tmp
+
+# Fuente grande del logo de partner (se usa la versión optimizada)
+assets/mundo-palito-nuevo.png

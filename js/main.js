@@ -60,6 +60,50 @@
     revealEls.forEach(function (el) { io.observe(el); });
   }
 
+  // -------- Parallax del fondo del hero (se mueve más lento al scrollear) --------
+  var heroBg = document.getElementById('heroBg');
+  if (heroBg && !reduceMotion) {
+    var parallaxTicking = false;
+    window.addEventListener('scroll', function () {
+      if (!parallaxTicking) {
+        window.requestAnimationFrame(function () {
+          var y = window.scrollY;
+          if (y <= window.innerHeight) {          // solo mientras el hero está a la vista
+            heroBg.style.transform = 'translate3d(0,' + (y * 0.28).toFixed(1) + 'px,0)';
+          }
+          parallaxTicking = false;
+        });
+        parallaxTicking = true;
+      }
+    }, { passive: true });
+  }
+
+  // -------- Parallax por elemento (data-speed): calcomanías de niveles, etc. --------
+  var speedEls = document.querySelectorAll('[data-speed]');
+  if (speedEls.length && !reduceMotion) {
+    var speedTicking = false;
+    function updateSpeedParallax() {
+      var vh = window.innerHeight;
+      speedEls.forEach(function (el) {
+        var rect = el.getBoundingClientRect();
+        if (rect.bottom > -240 && rect.top < vh + 240) {   // solo cerca del viewport
+          var speed = parseFloat(el.getAttribute('data-speed')) || 0;
+          var elCenter = rect.top + rect.height / 2;
+          var offset = (vh / 2) - elCenter;                 // distancia al centro de pantalla
+          el.style.transform = 'translate3d(0,' + (offset * speed).toFixed(1) + 'px,0)';
+        }
+      });
+    }
+    window.addEventListener('scroll', function () {
+      if (!speedTicking) {
+        window.requestAnimationFrame(function () { updateSpeedParallax(); speedTicking = false; });
+        speedTicking = true;
+      }
+    }, { passive: true });
+    window.addEventListener('resize', updateSpeedParallax, { passive: true });
+    updateSpeedParallax();
+  }
+
   // -------- Header: sticky siempre visible, con entrada al hacer scroll --------
   var header = document.querySelector('.site-header');
   if (header) {
